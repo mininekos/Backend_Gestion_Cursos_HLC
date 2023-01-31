@@ -1,0 +1,16 @@
+{
+  "name": "backend_gestion_cursos_hlc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dni-js-validator": "^1.0.1",
+    "moongose": "^1.0.0",
+    "validator": "^13.7.0"
+  }
+}
