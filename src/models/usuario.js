@@ -12,7 +12,6 @@ const Usuario=mongoose.model('Usuario',{
         type:String,
         required: true,
         lowercase: true,
-        maxLength:9,
         validate(value){
             if(!dniValidator.isValid(value)){
                 throw new Error('DNI no valido')
@@ -32,7 +31,6 @@ const Usuario=mongoose.model('Usuario',{
     tlf:{
         type:String,
         required: true,
-        maxLength:9,
         validate(value){
             if(!validator.isMobilePhone(value,'es-ES')){
                 throw new Error('tlf no valido')
