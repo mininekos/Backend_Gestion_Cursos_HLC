@@ -17,7 +17,7 @@ router.post('/usuarios', async(req,res)=>{
 router.get('/usuarios/:id',async (req,res)=>{
 
     try {
-        const usuario=await Usuario.findById(req.param.id)
+        const usuario=await Usuario.findById(req.params.id)
         if(!usuario){
             return res.status(404).send()
         }
@@ -37,7 +37,7 @@ router.patch('/usuarios/:id', async(req,res)=>{
     }
 
     try {
-        const usuario=await Usuario.findByIdAndUpdate(req.param.idreq.body, { new: true, runValidators: true })
+        const usuario=await Usuario.findByIdAndUpdate(req.params.idreq.body, { new: true, runValidators: true })
         if(!usuario){
             return res.status(404).send()
         }
@@ -51,7 +51,7 @@ router.patch('/usuarios/:id', async(req,res)=>{
 router.delete('/usuarios/:id', async (req,res)=>{
 
     try {
-        const usuario=await Usuario.findByIdAndDelete(req.param.id)
+        const usuario=await Usuario.findByIdAndDelete(req.params.id)
         if(!usuario){
             return res.status(404).send()
         }

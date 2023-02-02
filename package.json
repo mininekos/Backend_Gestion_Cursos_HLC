@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dni-js-validator": "^1.0.1",
+    "dni-js-validator": "^1.0.3",
     "express": "^4.18.2",
     "moongose": "^1.0.0",
     "validator": "^13.7.0"

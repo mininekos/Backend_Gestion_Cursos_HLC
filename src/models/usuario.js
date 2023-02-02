@@ -16,8 +16,7 @@ const Usuario=mongoose.model('Usuario',{
         validate(value){
             if(!dniValidator.isValid(value)){
                 throw new Error('DNI no valido')
-            }
-           
+            }   
         }
     },
     email:{
