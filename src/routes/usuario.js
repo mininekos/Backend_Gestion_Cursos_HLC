@@ -2,7 +2,7 @@ const express = require('express')
 const Usuario = require('../models/usuario')
 const router = new express.Router()
 
-router.post('/usuarios', async(req,res)=>{
+router.post('/crearusuario', async(req,res)=>{
     const usuario = new Usuario(req.body)
 
     try {
@@ -14,7 +14,7 @@ router.post('/usuarios', async(req,res)=>{
 
 })
 
-router.get('/usuarios/:id',async (req,res)=>{
+router.get('/buscarusuario/:id',async (req,res)=>{
 
     try {
         const usuario=await Usuario.findById(req.params.id)
@@ -26,7 +26,7 @@ router.get('/usuarios/:id',async (req,res)=>{
     }
 })
 
-router.patch('/usuarios/:id', async(req,res)=>{
+router.patch('/actualizarusuario/:id', async(req,res)=>{
     // Hago las comparaciones necesarias para los campos obligatorios
     const actualizaciones= Object.keys(req.body)
     const comparar=['nombre','dni','email','tlf']
@@ -48,7 +48,7 @@ router.patch('/usuarios/:id', async(req,res)=>{
 
 })
 
-router.delete('/usuarios/:id', async (req,res)=>{
+router.delete('/eliminarusuario/:id', async (req,res)=>{
 
     try {
         const usuario=await Usuario.findByIdAndDelete(req.params.id)
