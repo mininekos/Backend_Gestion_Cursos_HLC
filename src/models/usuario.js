@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const dniValidator= require('dni-js-validator')
+const bcrypt = require('bcryptjs')
 
-const Usuario=mongoose.model('Usuario',{
+const UsuarioSchema=mongoose.Schema({
 
-    nombre:{
+    name:{
         type:String,
         required: true
     },
@@ -36,8 +37,32 @@ const Usuario=mongoose.model('Usuario',{
                 throw new Error('tlf no valido')
             }
         }
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 7,
+        validate(value) {
+            if (value.toLowerCase().includes('password')) {
+                throw new Error('Password cannot contain "password"')
+            }
+        }
     }
+    
+    
 
 })
+
+userSchema.pre('save', async function (next) {
+    const user = this
+
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 8)
+    }
+
+    next()
+})
+
+const Usuario = mongoose.model('Usuario',UsuarioSchema)
 
 module.exports= Usuario

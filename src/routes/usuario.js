@@ -29,7 +29,7 @@ router.get('/buscarusuario/:id',async (req,res)=>{
 router.patch('/actualizarusuario/:id', async(req,res)=>{
     // Hago las comparaciones necesarias para los campos obligatorios
     const actualizaciones= Object.keys(req.body)
-    const comparar=['nombre','dni','email','tlf']
+    const comparar=['nombre','dni','email','tlf','password']
     const operacionValida=actualizaciones.every((actualizacion)=>comparar.includes(actualizacion))
 
     if(!operacionValida){
@@ -37,7 +37,9 @@ router.patch('/actualizarusuario/:id', async(req,res)=>{
     }
 
     try {
-        const usuario=await Usuario.findByIdAndUpdate(req.params.idreq.body, { new: true, runValidators: true })
+        const usuario=await Usuario.findById(req.params.id)
+        actualizaciones.forEach((actu)=>usuario[actu]=req.body[actu])
+        await usuario.save()
         if(!usuario){
             return res.status(404).send()
         }
