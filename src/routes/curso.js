@@ -1,8 +1,9 @@
 const express = require('express')
 const Curso = require('../models/curso')
+const auth = require('../middleware/autentificar')
 const router = new express.Router()
 
-router.post('/crearcurso', async(req,res)=>{
+router.post('/curso/crear', auth , async(req,res)=>{
     const curso = new Curso(req.body)
 
     try {
@@ -14,19 +15,41 @@ router.post('/crearcurso', async(req,res)=>{
 
 })
 
-router.get('/buscarcurso/:id',async (req,res)=>{
+router.get('/curso/verUno/:id',auth ,async (req,res)=>{
 
     const _id=req.params.id
-    console.log(_id)
+
     try {
         const curso=await Curso.findById(_id)
-        console.log(curso)
         if(!curso){
             return res.status(404).send()
         }
         res.status(200).send(curso)
     } catch (error) {
         res.status(500).send(error)
+    }
+})
+
+router.get('/curso/verTodosCreados/:id',async (req,res)=>{
+
+    try{
+        id= mongoose.Types.ObjectId(req.params.id)
+        const cursos=await Curso.find({id_usuario: id})
+        res.send(cursos)
+
+    } catch(e){
+        res.send(e)
+    }
+})
+
+router.get('/curso/verTodos',async (req,res)=>{
+
+    try{
+        const cursos=await Curso.find({})
+        res.send(cursos)
+
+    } catch(e){
+        res.send(e)
     }
 })
 

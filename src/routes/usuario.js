@@ -24,12 +24,29 @@ router.post('/usuario/login',async (req,res)=>{
     }
 })
 
+router.get('/usuario/me', auth, async (req,res)=>{
+    res.send(req.usuario)
+})
+
+router.post('/usuario/logout', auth, async (req,res)=>{
+    try {
+        req.usuario.tokens = req.usuario.tokens.filter((token)=>{
+            return token.token !== req.token
+        })
+        await req.usuario.save()
+
+        res.send()
+    } catch (error) {
+        res.status(500).send.error
+    }
+})
+
 router.patch('/usuario/actualizar', auth, async(req,res)=>{
     // Hago las comparaciones necesarias para los campos obligatorios
     const actualizaciones= Object.keys(req.body)
-    const comparar=['nombre','dni','email','tlf','password']
+    const comparar=['name','dni','email','tlf','password']
     const operacionValida=actualizaciones.every((actualizacion)=>comparar.includes(actualizacion))
-
+    
     if(!operacionValida){
         return res.status(400).send({ error: 'Actualizacion no valida' })
     }

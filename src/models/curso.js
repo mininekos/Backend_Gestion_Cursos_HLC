@@ -23,16 +23,16 @@ const cursoSchema= new mongoose.Schema({
     }
 }, { timestamps: true })
 
-cursoSchema.methods.toJSON = function () {
-    const curso = this
-    const cursoObject = curso.toObject()
+// cursoSchema.methods.toJSON = function () {
+//     const curso = this
+//     const cursoObject = curso.toObject()
 
-    curso.nombreUsuario=cursoObject.id_usuario.name
-    delete cursoObject.__v
-    delete cursoObject.id_usuario
+//     this.nombreUsuario=cursoObject.id_usuario.name
+//     delete cursoObject.__v
+//     delete cursoObject.id_usuario
 
-    return cursoObject
-}
+//     return cursoObject
+// }
 
 const Curso=mongoose.model('Curso',cursoSchema)
 module.exports=Curso
