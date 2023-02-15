@@ -1,8 +1,9 @@
 const express = require('express')
 const Usuario = require('../models/usuario')
+const auth = require('../middleware/autentificar')
 const router = new express.Router()
 
-router.post('/crearusuario', async(req,res)=>{
+router.post('/usuario/crear', async(req,res)=>{
     const usuario = new Usuario(req.body)
 
     try {
@@ -13,20 +14,17 @@ router.post('/crearusuario', async(req,res)=>{
     }
 
 })
-
-router.get('/buscarusuario/:id',async (req,res)=>{
-
+router.post('/usuario/login',async (req,res)=>{
     try {
-        const usuario=await Usuario.findById(req.params.id)
-        if(!usuario){
-            return res.status(404).send()
-        }
+        const usuario = await Usuario.findByCredentials(req.body.email, req.body.password)
+        const token = await usuario.generateAuthToken()
+        res.send({ usuario, token })
     } catch (error) {
-        res.status(500).send.error
+        res.status(400).send.error
     }
 })
 
-router.patch('/actualizarusuario/:id', async(req,res)=>{
+router.patch('/usuario/actualizar', auth, async(req,res)=>{
     // Hago las comparaciones necesarias para los campos obligatorios
     const actualizaciones= Object.keys(req.body)
     const comparar=['nombre','dni','email','tlf','password']
@@ -37,27 +35,20 @@ router.patch('/actualizarusuario/:id', async(req,res)=>{
     }
 
     try {
-        const usuario=await Usuario.findById(req.params.id)
-        actualizaciones.forEach((actu)=>usuario[actu]=req.body[actu])
-        await usuario.save()
-        if(!usuario){
-            return res.status(404).send()
-        }
-        res.send(usuario)
+        actualizaciones.forEach((actu)=>req.usuario[actu]=req.body[actu])
+        await req.usuario.save()
+        res.send(req.usuario)
     } catch (error) {
-        res.status(500).send.error
+        return res.status(400).send()
     }
 
 })
 
-router.delete('/eliminarusuario/:id', async (req,res)=>{
+router.delete('/usuario/eliminar', auth, async (req,res)=>{
 
     try {
-        const usuario=await Usuario.findByIdAndDelete(req.params.id)
-        if(!usuario){
-            return res.status(404).send()
-        }
-        res.send(usuario)
+        await req.usuario.remove()
+        res.send(req.usuario)
     } catch (error) {
         res.status(500).send.error
     }

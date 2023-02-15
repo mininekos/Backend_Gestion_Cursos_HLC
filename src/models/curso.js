@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
-const Curso=mongoose.model('Curso',{
+const cursoSchema= new mongoose.Schema({
 
     nombre:{
         type:String,
@@ -11,7 +10,29 @@ const Curso=mongoose.model('Curso',{
         type:String,
         required:true,
         maxLength: 100
+    },
+    id_usuario:{
+        type: mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref: 'Usuario'
+    },
+    precio:{
+        type: Number,
+        required:true,
+        min:0
     }
-})
+}, { timestamps: true })
 
+cursoSchema.methods.toJSON = function () {
+    const curso = this
+    const cursoObject = curso.toObject()
+
+    curso.nombreUsuario=cursoObject.id_usuario.name
+    delete cursoObject.__v
+    delete cursoObject.id_usuario
+
+    return cursoObject
+}
+
+const Curso=mongoose.model('Curso',cursoSchema)
 module.exports=Curso
