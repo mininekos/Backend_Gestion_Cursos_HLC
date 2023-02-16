@@ -16,10 +16,7 @@ const compraSchema= new mongoose.Schema({
 }, { timestamps: true }
 )
 
-compraSchema.statics.findCompras = async (id_usuario) => {
-    const compras = await Compra.find({ id_usuario })
-    return compras
-}
+
 
 const Compra=mongoose.model('Compra',compraSchema)
 

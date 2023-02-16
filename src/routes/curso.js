@@ -57,17 +57,17 @@ router.get('/curso/verTodosDemas', auth, async (req,res)=>{
 
     try{
         const cursos=await Curso.find({id_usuario: {$ne: req.usuario._id}})
-        cursos.forEach((curso)=>{
-            // curso.nombreAutor=curso.populate('id_usuario').execPopulate().name
-            curso.populate('id_usuario', 'name').exec(
-                (err)=>{
-                    if(err){
-                        console.log(err)
-                    }
+        .populate('id_usuario', 'name').exec(
+            (err,cursos)=>{
+                if(err){
+                    console.log(err)
                 }
-            );
-        }, this);
-        res.send(cursos)
+                else{
+                    res.send(cursos)
+                }
+            });
+        
+        
 
     } catch(e){
         res.status(500).send(e)
