@@ -1,21 +1,18 @@
 const express= require('express')
 const Compra = require('../models/compra')
+const auth = require('../middleware/autentificar')
 const router = new express.Router()
 
 
-router.post('/compra/', async (req, res) => {
+router.post('/compra/crear',auth, async (req, res) => {
+    const compra = new Compra(req.body)
+    try{
+        await compra.save()
+        res.status(201).send(compra)
+    }catch(e){
 
-
-
-})
-
-router.get('/compra/', async (req, res) => {
-
-})
-
-router.delete('/compra/eliminar', async (req, res) => {
+    }
 
 })
-
 
 module.exports = router

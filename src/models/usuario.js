@@ -12,7 +12,6 @@ const UsuarioSchema=new mongoose.Schema({
     },
     dni:{
         type:String,
-        required: true,
         lowercase: true,
         validate(value){
             if(!dniValidator.isValid(value)){
@@ -24,6 +23,7 @@ const UsuarioSchema=new mongoose.Schema({
         type:String,
         required: true,
         lowercase: true,
+        unique: true,
         validate(value){
             if(!validator.isEmail(value)){
                 throw new Error('Email no valido')
@@ -32,7 +32,6 @@ const UsuarioSchema=new mongoose.Schema({
     },
     tlf:{
         type:String,
-        required: true,
         validate(value){
             if(!validator.isMobilePhone(value,'es-ES')){
                 throw new Error('tlf no valido')

@@ -30,19 +30,18 @@ router.get('/curso/verUno/:id',auth ,async (req,res)=>{
     }
 })
 
-router.get('/curso/verTodosCreados/:id',async (req,res)=>{
+router.get('/curso/verTodosCreados',auth,async (req,res)=>{
 
     try{
-        id= mongoose.Types.ObjectId(req.params.id)
-        const cursos=await Curso.find({id_usuario: id})
+        const cursos=await Curso.find({id_usuario: req.usuario._id})
         res.send(cursos)
 
     } catch(e){
-        res.send(e)
+        res.status(500).send(e)
     }
 })
 
-router.get('/curso/verTodos',async (req,res)=>{
+router.get('/curso/verTodos', auth, async (req,res)=>{
 
     try{
         const cursos=await Curso.find({})
@@ -53,10 +52,26 @@ router.get('/curso/verTodos',async (req,res)=>{
     }
 })
 
-router.patch('/modificarcurso/:id', async(req,res)=>{
+router.get('/curso/verTodosDemas', auth, async (req,res)=>{
+
+
+    try{
+        const cursos=await Curso.find({id_usuario: {$ne: req.usuario._id}})
+        cursos.forEach((curso)=>{
+            // curso.nombreAutor=curso.populate('id_usuario').execPopulate().name
+            console.log(curso.populate('id_usuario').execPopulate().name)
+        }, this);
+        res.send(cursos)
+
+    } catch(e){
+        res.status(500).send(e)
+    }
+})
+
+router.patch('/modificarcurso/:id', auth, async(req,res)=>{
     // Hago las comparaciones necesarias para los campos obligatorios
     const actualizaciones= Object.keys(req.body)
-    const comparar=['nombre','descripcion']
+    const comparar=['nombre','descripcion','precio']
     const operacionValida=actualizaciones.every((actualizacion)=>comparar.includes(actualizacion))
 
     if(!operacionValida){
@@ -64,10 +79,12 @@ router.patch('/modificarcurso/:id', async(req,res)=>{
     }
 
     try {
-        const curso=await Curso.findByIdAndUpdate(req.params.idreq.body, { new: true, runValidators: true })
+        const curso=await Curso.findById({_id:req.params.id, id_usuario: req.usuario._id})
         if(!curso){
             return res.status(404).send()
         }
+        actualizaciones.forEach((actu)=>curso[actu]=req.body[actu])
+        await curso.save()
         res.send(curso)
     } catch (error) {
         res.status(500).send(error)
@@ -75,7 +92,7 @@ router.patch('/modificarcurso/:id', async(req,res)=>{
 
 })
 
-router.delete('/eliminarcurso/:id', async (req,res)=>{
+router.delete('/eliminarcurso/:id', auth, async (req,res)=>{
 
     try {
         const curso=await Curso.findByIdAndDelete(req.params.id)

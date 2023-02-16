@@ -13,6 +13,7 @@ const autentificar=async (req,res,next) => {
 
         req.token = token
         req.usuario = usuario
+        
         next()
     }catch(e){
         res.status(401).send({error:'Por favor autentificate'})
