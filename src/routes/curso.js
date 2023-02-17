@@ -20,7 +20,7 @@ router.get('/curso/verUno/:id',auth ,async (req,res)=>{
     const _id=req.params.id
 
     try {
-        const curso=await Curso.findById(_id)
+        const curso=await Curso.findById(_id).populate('autor')
         if(!curso){
             return res.status(404).send()
         }
@@ -33,7 +33,7 @@ router.get('/curso/verUno/:id',auth ,async (req,res)=>{
 router.get('/curso/verTodosCreados',auth,async (req,res)=>{
 
     try{
-        const cursos=await Curso.find({id_usuario: req.usuario._id})
+        const cursos=await Curso.find({id_usuario: req.usuario._id}).populate('autor')
         res.send(cursos)
 
     } catch(e){
@@ -44,7 +44,7 @@ router.get('/curso/verTodosCreados',auth,async (req,res)=>{
 router.get('/curso/verTodos', auth, async (req,res)=>{
 
     try{
-        const cursos=await Curso.find({})
+        const cursos=await Curso.find({}).populate('autor')
         res.send(cursos)
 
     } catch(e){
@@ -78,7 +78,7 @@ router.patch('/modificarcurso/:id', auth, async(req,res)=>{
     }
 
     try {
-        const curso=await Curso.findById({_id:req.params.id, autor: req.usuario._id})
+        const curso=await Curso.findById({_id:req.params.id, autor: req.usuario._id}).populate('autor')
         if(!curso){
             return res.status(404).send()
         }
