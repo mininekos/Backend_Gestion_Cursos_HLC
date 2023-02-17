@@ -12,7 +12,7 @@ router.post('/compra/crear',auth, async (req, res) => {
             return res.status(409).send({ error: 'Ya tienes este curso comprado' })
         }
         else{
-            const nuevaCompra= new Compra({ id_usuario: req.usuario._id, id_curso: req.body.id_curso })
+            const nuevaCompra= new Compra({ id_usuario: req.usuario._id, id_curso: req.body.id_curso , precio:req.body.precio})
             await nuevaCompra.save()
             res.status(201).send(nuevaCompra)
         }

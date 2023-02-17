@@ -12,7 +12,12 @@ const compraSchema= new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required:true,
         ref: 'Curso'
-    }
+    },
+    precio:{  
+        type: Number,
+        required:true,
+        min:0
+    },
 }, { timestamps: true }
 )
 
