@@ -11,14 +11,10 @@ const cursoSchema= new mongoose.Schema({
         required:true,
         maxLength: 100
     },
-    id_usuario:{
+    autor:{
         type: mongoose.Schema.Types.ObjectId,
         required:true,
-        ref: 'Usuario',
-        populate: {
-            path: 'name',
-            select: 'name -_id'
-          }
+        ref: 'Usuario'
     },
     precio:{
         type: Number,
@@ -32,8 +28,11 @@ cursoSchema.methods.toJSON = function () {
     const cursoObject = curso.toObject()
     
     delete cursoObject.__v
-    cursoObject.Creador = cursoObject.id_usuario.name
-    delete cursoObject.id_usuario
+    
+    try{
+        cursoObject.nombreAutor = cursoObject.autor.name
+    } catch(e){cursoObject.nombreAutor = 'Autor eliminado'}
+    delete cursoObject.autor
 
     return cursoObject
 }

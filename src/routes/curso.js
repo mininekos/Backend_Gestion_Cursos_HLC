@@ -56,16 +56,9 @@ router.get('/curso/verTodosDemas', auth, async (req,res)=>{
 
 
     try{
-        const cursos=await Curso.find({id_usuario: {$ne: req.usuario._id}})
-        .populate('id_usuario', 'name').exec(
-            (err,cursos)=>{
-                if(err){
-                    console.log(err)
-                }
-                else{
-                    res.send(cursos)
-                }
-            });
+        const cursos=await Curso.find({autor: {$ne: req.usuario._id}}).populate('autor')
+
+        res.send(cursos)
         
         
 
@@ -85,7 +78,7 @@ router.patch('/modificarcurso/:id', auth, async(req,res)=>{
     }
 
     try {
-        const curso=await Curso.findById({_id:req.params.id, id_usuario: req.usuario._id})
+        const curso=await Curso.findById({_id:req.params.id, autor: req.usuario._id})
         if(!curso){
             return res.status(404).send()
         }
