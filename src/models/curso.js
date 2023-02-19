@@ -31,7 +31,9 @@ cursoSchema.methods.toJSON = function () {
     
     try{
         cursoObject.nombreAutor = cursoObject.autor.name
-    } catch(e){cursoObject.nombreAutor = 'Autor eliminado'}
+    } catch(e){
+        cursoObject.nombreAutor = 'Autor eliminado'}
+        
     delete cursoObject.autor
 
     return cursoObject

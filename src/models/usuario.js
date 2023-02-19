@@ -6,13 +6,14 @@ const jsonWT = require('jsonwebtoken')
 
 const UsuarioSchema=new mongoose.Schema({
 
-    name:{
+    nombre:{
         type:String,
         required: true
     },
     dni:{
         type:String,
         lowercase: true,
+        required: true,
         validate(value){
             if(!dniValidator.isValid(value)){
                 throw new Error('DNI no valido')

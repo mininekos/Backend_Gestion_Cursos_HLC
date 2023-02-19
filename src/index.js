@@ -1,4 +1,5 @@
 const express=require('express')
+const cors=require('cors')
 require('./db/mongoose')
 
 const cursoRouter= require('./routes/curso')
@@ -8,6 +9,7 @@ const compraRouter= require('./routes/compra')
 const app=express()
 const puerto = process.env.PORT || 3000
 
+app.use(cors());
 app.use(express.json())
 app.use(cursoRouter)
 app.use(usuarioRouter)
