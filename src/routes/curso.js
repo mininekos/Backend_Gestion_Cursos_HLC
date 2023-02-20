@@ -1,10 +1,15 @@
 const express = require('express')
 const Curso = require('../models/curso')
+const Compra = require('../models/compra')
 const auth = require('../middleware/autentificar')
 const router = new express.Router()
 
 router.post('/curso/crear', auth , async(req,res)=>{
-    const curso = new Curso(req.body)
+    const curso = new Curso({
+        ...req.body,
+        autor: req.usuario._id})
+    
+        
 
     try {
         await curso.save()
@@ -56,10 +61,26 @@ router.get('/curso/verTodosDemas', auth, async (req,res)=>{
 
 
     try{
-        const cursos=await Curso.find({autor: {$ne: req.usuario._id}}).populate('autor')
 
-        res.send(cursos)
-        
+        const cursos=await Curso.find({autor: {$ne: req.usuario._id}}).populate('autor')
+        const cursosConCompra = await Promise.all(cursos.map(async (curso) => {
+            const compra = await Compra.findOne({ id_usuario: req.usuario._id, id_curso: curso._id }).lean()
+                if (compra) {
+                return {  _id: curso._id,
+                    nombre: curso.nombre,
+                    descripcion: curso.descripcion,
+                    precio: curso.precio,
+                    comprado: true}
+                } else {
+                return {  _id: curso._id,
+                    nombre: curso.nombre,
+                    descripcion: curso.descripcion,
+                    precio: curso.precio,
+                    comprado: false }
+                }
+          }))
+
+        res.send(cursosConCompra)      
         
 
     } catch(e){
