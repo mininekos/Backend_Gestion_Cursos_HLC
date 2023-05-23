@@ -38,7 +38,7 @@ router.get('/curso/verUno/:id',auth ,async (req,res)=>{
 router.get('/curso/verTodosCreados',auth,async (req,res)=>{
 
     try{
-        const cursos=await Curso.find({id_usuario: req.usuario._id}).populate('autor')
+        const cursos=await Curso.find({autor: req.usuario._id}).populate('autor')
         res.send(cursos)
 
     } catch(e){
